@@ -1,5 +1,6 @@
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 import Login from "@/routes/Login/Login.tsx";
+import Home from "./routes/Home/Home";
 
 function App() {
     const savedTheme = localStorage.getItem('theme')
@@ -11,6 +12,7 @@ function App() {
     <>
         <BrowserRouter>
             <Routes>
+                <Route path="/" element={<Home/>}/>
                 <Route path="/login" element={<Login/>} />
             </Routes>
         </BrowserRouter>

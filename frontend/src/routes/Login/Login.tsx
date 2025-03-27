@@ -20,28 +20,31 @@ export default function Login(){
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setIsLoading(true);
-
-        if(!formData.email || !formData.password) {
+    
+        if (!formData.email || !formData.password) {
             setError("Please fill out all fields");
             setIsLoading(false);
             return;
         }
-
+    
         try {
-            const loginData: ILogin = {
-                email: formData.email,
-                password: formData.password,
+            const response = await login(formData);
+            
+            if (response.session) {
+                localStorage.setItem("access_token", response.session.access_token);
+                localStorage.setItem("refresh_token", response.session.refresh_token);
+                localStorage.setItem("expires_at", response.session.expires_at.toString());
+                localStorage.setItem("user", JSON.stringify(response.user));
+    
+                console.log("User logged in:", response.user);
             }
-            const response = await login(loginData);
-            console.log(response);
-        } catch(e) {
+        } catch (e) {
             setError("Invalid login credentials");
-            console.error("Login error:", e)
+            console.error("Login error:", e);
         } finally {
             setIsLoading(false);
         }
     };
-
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
